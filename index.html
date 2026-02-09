@@ -1,0 +1,1366 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>iPhones</title>
+  <style>
+    :root{
+      /* LIGHT THEME */
+      --bg1:#f6f8ff;
+      --bg2:#eef2ff;
+      --card:#ffffffcc;
+      --card2:#ffffff;
+      --text:#0f172a;
+      --muted:#475569;
+      --line:rgba(15,23,42,.10);
+      --accent:#2563eb;
+      --accent2:#7c3aed;
+      --shadow: 0 16px 34px rgba(15,23,42,.10);
+      --shadow2: 0 10px 20px rgba(15,23,42,.08);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% 0%, #dbeafe 0%, transparent 55%),
+        radial-gradient(900px 550px at 90% 20%, #ede9fe 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+    }
+
+    .wrap{
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 16px 14px 96px;
+    }
+
+    /* Top: ONLY SEARCH */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: 10px 0 12px;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(246,248,255,.92), rgba(246,248,255,.35));
+    }
+
+    .search{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.78);
+      box-shadow: var(--shadow2);
+    }
+    .search input{
+      width:100%;
+      border: none;
+      outline: none;
+      color: var(--text);
+      background: transparent;
+      font-size: 15px;
+    }
+
+    .list{
+      margin-top: 14px;
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* One phone per row, BIG image */
+    .card{
+      display:flex;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 12px;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      user-select: none;
+    }
+
+    .imgBox{
+      width: 150px;
+      height: 150px;
+      border-radius: 18px;
+      background: rgba(37,99,235,.05);
+      border: 1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .imgBox img{
+      width: 96%;
+      height: 96%;
+      object-fit: contain;
+      filter: drop-shadow(0 14px 18px rgba(15,23,42,.18));
+    }
+
+    .info{
+      flex: 1;
+      min-width: 0;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .name{
+      font-size: 16px;
+      font-weight: 900;
+      margin: 0;
+      letter-spacing: .1px;
+      line-height: 1.15;
+      word-break: break-word;
+    }
+
+    .actionsRow{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    /* BUTTONS (harmonious, attention-grabbing but subtle) */
+    .btnSoft{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(37,99,235,.18);
+      background: linear-gradient(180deg, rgba(37,99,235,.06), rgba(124,58,237,.04));
+      color: var(--text);
+      font-weight: 900;
+      font-size: 13px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(15,23,42,.06);
+      white-space: nowrap;
+      transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .btnSoft:active{ transform: scale(.99); }
+    .btnSoft:hover{ border-color: rgba(37,99,235,.28); box-shadow: 0 14px 26px rgba(15,23,42,.08); }
+    .btnSoft svg{ width: 16px; height: 16px; }
+
+    .iconPill{
+      width: 46px;
+      height: 46px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 16px;
+      border: 1px solid rgba(37,99,235,.18);
+      background: linear-gradient(180deg, rgba(37,99,235,.06), rgba(124,58,237,.04));
+      cursor:pointer;
+      box-shadow: 0 10px 20px rgba(15,23,42,.06);
+      transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease;
+      flex: 0 0 auto;
+    }
+    .iconPill:hover{ border-color: rgba(37,99,235,.28); box-shadow: 0 14px 26px rgba(15,23,42,.08); }
+    .iconPill:active{ transform: scale(.99); }
+    .iconPill svg{ width: 20px; height: 20px; }
+
+    /* Floating cart button */
+    .cartFab{
+      position: fixed;
+      right: 14px;
+      bottom: calc(14px + env(safe-area-inset-bottom));
+      z-index: 40;
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      border: 1px solid rgba(37,99,235,.22);
+      background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.86));
+      box-shadow: var(--shadow);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .cartFab:hover{ border-color: rgba(37,99,235,.32); box-shadow: 0 18px 36px rgba(15,23,42,.12); }
+    .cartFab:active{ transform: scale(.99); }
+    .cartFab svg{ width: 22px; height: 22px; }
+
+    .badge{
+      position:absolute;
+      top: -8px;
+      right: -8px;
+      min-width: 22px;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(37,99,235,.95), rgba(124,58,237,.95));
+      color: #fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 12px;
+      font-weight: 900;
+      border: 2px solid rgba(255,255,255,.95);
+      box-shadow: 0 10px 20px rgba(37,99,235,.18);
+    }
+    .badge.hidden{ display:none; }
+
+    /* Modal overlay */
+    .overlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.40);
+      display:none;
+      z-index: 50;
+    }
+    .overlay.show{ display:block; }
+
+    .sheet{
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: -100%;
+      z-index: 60;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(15,23,42,.12);
+      border-radius: 22px 22px 0 0;
+      padding: 12px 14px 18px;
+      box-shadow: 0 -18px 50px rgba(15,23,42,.18);
+      transition: bottom .28s ease;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .sheet.show{ bottom: 0; }
+
+    .grab{
+      width: 44px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(15,23,42,.18);
+      margin: 6px auto 10px;
+    }
+
+    .sheetHeader{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      padding: 6px 2px 10px;
+    }
+
+    .sheetImg{
+      width: 78px;
+      height: 78px;
+      border-radius: 18px;
+      background: rgba(37,99,235,.05);
+      border: 1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .sheetImg img{ width: 96%; height: 96%; object-fit: contain; }
+
+    .sheetTitle{ flex:1; min-width:0; }
+    .sheetTitle h2{
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: .2px;
+    }
+    .sheetTitle p{
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .closeBtn{
+      width: 42px; height: 42px;
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.12);
+      background: rgba(255,255,255,.9);
+      color: var(--text);
+      font-size: 18px;
+      cursor:pointer;
+      box-shadow: var(--shadow2);
+      transition: transform .08s ease, box-shadow .18s ease;
+    }
+    .closeBtn:active{ transform: scale(.98); }
+
+    .section{
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.75);
+      box-shadow: var(--shadow2);
+    }
+    .section h3{
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 900;
+      letter-spacing: .2px;
+      text-transform: uppercase;
+    }
+
+    .swatches{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .swatch{
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.14);
+      background: var(--c, #999);
+      position: relative;
+      cursor:pointer;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.06);
+      transition: transform .08s ease, outline-color .18s ease;
+    }
+    .swatch:active{ transform: scale(.98); }
+    .swatch[aria-pressed="true"]{
+      outline: 2px solid rgba(37,99,235,.9);
+      outline-offset: 2px;
+    }
+    .swatch::after{
+      content:"";
+      position:absolute;
+      inset: 7px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), transparent 55%);
+      opacity: .55;
+      pointer-events:none;
+    }
+
+    .chips{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .chip{
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(15,23,42,.12);
+      background: rgba(255,255,255,.9);
+      color: var(--text);
+      font-size: 14px;
+      cursor:pointer;
+      user-select:none;
+      min-width: 92px;
+      text-align:center;
+      box-shadow: 0 10px 20px rgba(15,23,42,.06);
+      font-weight: 900;
+      transition: transform .08s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .chip:hover{ border-color: rgba(37,99,235,.22); box-shadow: 0 14px 26px rgba(15,23,42,.08); }
+    .chip:active{ transform: scale(.99); }
+    .chip[aria-pressed="true"]{
+      border-color: rgba(37,99,235,.85);
+      box-shadow: 0 0 0 2px rgba(37,99,235,.16) inset, 0 14px 26px rgba(15,23,42,.08);
+    }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn{
+      flex:1;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.12);
+      background: rgba(255,255,255,.92);
+      color: var(--text);
+      font-size: 14px;
+      cursor:pointer;
+      font-weight: 900;
+      box-shadow: var(--shadow2);
+      transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .btn:hover{ box-shadow: 0 14px 26px rgba(15,23,42,.10); }
+    .btn:active{ transform: scale(.99); }
+
+    .btn.primary{
+      border: 1px solid rgba(37,99,235,.22);
+      background: linear-gradient(135deg, rgba(37,99,235,.12), rgba(124,58,237,.10));
+      color: var(--text);
+    }
+    .btn.primary:hover{
+      border-color: rgba(37,99,235,.34);
+      box-shadow: 0 18px 34px rgba(37,99,235,.10);
+    }
+    .btn.primary .btnRow{
+      display:flex; align-items:center; justify-content:center; gap:10px;
+    }
+    .btn.primary svg{ width: 18px; height: 18px; }
+
+    /* ===== CART (polished) ===== */
+    .cartSummary{
+      margin-top: 6px;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.74));
+      box-shadow: var(--shadow2);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .cartSummary .left{
+      display:flex; flex-direction:column; gap: 4px; min-width:0;
+    }
+    .cartSummary .title{
+      margin:0;
+      font-weight: 900;
+      font-size: 14px;
+      letter-spacing:.1px;
+    }
+    .cartSummary .meta{
+      margin:0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+    .cartSummary .pill{
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(37,99,235,.18);
+      background: linear-gradient(135deg, rgba(37,99,235,.10), rgba(124,58,237,.08));
+      font-weight: 900;
+      font-size: 12px;
+      white-space:nowrap;
+      box-shadow: 0 10px 20px rgba(37,99,235,.10);
+    }
+
+    .cartList{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .cartItem{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.72));
+      box-shadow: var(--shadow2);
+    }
+    .cartMain{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      min-width:0;
+      flex: 1;
+    }
+    .cartThumb{
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(37,99,235,.05);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .cartThumb img{
+      width: 92%;
+      height: 92%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 12px rgba(15,23,42,.12));
+    }
+    .cartLeft{
+      min-width:0;
+      display:flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .cartName{
+      font-weight: 900;
+      font-size: 14px;
+      margin: 0;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+    .cartMeta{
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+    .cartRight{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+    .qtyWrap{
+      display:flex;
+      align-items:center;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.88);
+      box-shadow: 0 10px 20px rgba(15,23,42,.05);
+    }
+    .qtyPill{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,23,42,.10);
+      background: rgba(255,255,255,.92);
+      font-weight: 900;
+      font-size: 12px;
+      color: var(--text);
+      min-width: 44px;
+      text-align:center;
+    }
+    .qtyBtn{
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid rgba(37,99,235,.18);
+      background: linear-gradient(180deg, rgba(37,99,235,.06), rgba(124,58,237,.04));
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease;
+      box-shadow: 0 10px 20px rgba(15,23,42,.05);
+    }
+    .qtyBtn:hover{ border-color: rgba(37,99,235,.28); box-shadow: 0 14px 26px rgba(15,23,42,.07); }
+    .qtyBtn:active{ transform: scale(.99); }
+    .qtyBtn svg{ width: 16px; height: 16px; }
+
+    .iconBtn{
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,.12);
+      background: rgba(255,255,255,.92);
+      cursor:pointer;
+      box-shadow: 0 10px 20px rgba(15,23,42,.06);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .iconBtn:hover{ border-color: rgba(37,99,235,.20); box-shadow: 0 14px 26px rgba(15,23,42,.08); }
+    .iconBtn:active{ transform: scale(.99); }
+    .iconBtn svg{ width: 18px; height: 18px; }
+
+    .emptyBox{
+      padding: 12px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.75);
+      box-shadow: var(--shadow2);
+      color: var(--muted);
+      font-size: 13px;
+      text-align:center;
+      font-weight: 700;
+    }
+
+    /* Cart actions: nicer layout */
+    .cartActions{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .cartActions .row{
+      display:flex;
+      gap: 10px;
+    }
+    .cartActions .row .btn{ flex:1; }
+    .cartActions .bigPrimary{
+      width:100%;
+      padding: 13px 12px;
+      border-radius: 18px;
+    }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(15,23,42,.12);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      z-index: 80;
+      max-width: min(92vw, 520px);
+      text-align:center;
+      font-weight: 900;
+    }
+    .toast.show{
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    .footerHint{
+      position: fixed;
+      left: 0; right: 0;
+      bottom: 0;
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
+      background: linear-gradient(180deg, transparent, rgba(246,248,255,.95));
+      color: var(--muted);
+      font-size: 12px;
+      text-align:center;
+      z-index: 4;
+      pointer-events:none;
+    }
+
+    /* ===== FULLSCREEN INSIGHTS (check + fireworks) ===== */
+    .insightsOverlay{
+      position: fixed;
+      inset: 0;
+      display:none;
+      z-index: 90;
+      background: rgba(15,23,42,.52);
+      backdrop-filter: blur(10px);
+    }
+    .insightsOverlay.show{ display:block; }
+
+    #confettiCanvas{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+    }
+
+    .insightsCenter{
+      position:absolute;
+      inset: 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 22px;
+      text-align:center;
+      pointer-events:none;
+    }
+
+    /* CHANGED: only check (no text) */
+    .checkCard{
+      pointer-events:none;
+      width: min(220px, 72vw);
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.08));
+      box-shadow: 0 26px 70px rgba(0,0,0,.25);
+      padding: 22px;
+      display:flex;
+      flex-direction: column;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .checkBadge{
+      width: 92px;
+      height: 92px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(37,99,235,.95), rgba(124,58,237,.95));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 22px 46px rgba(37,99,235,.25);
+      border: 2px solid rgba(255,255,255,.22);
+    }
+
+    .checkSvg{
+      width: 54px;
+      height: 54px;
+    }
+    .checkPath{
+      stroke: rgba(255,255,255,.98);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: drawCheck .55s ease forwards;
+    }
+    @keyframes drawCheck{
+      to{ stroke-dashoffset: 0; }
+    }
+
+    @media (max-width: 360px){
+      .imgBox{ width: 132px; height: 132px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="search" role="search">
+        <span aria-hidden="true">🔎</span>
+        <input id="search" type="search" placeholder="Search iPhone model…" autocomplete="off" />
+      </div>
+    </header>
+
+    <main class="list" id="list" aria-label="Phone list"></main>
+  </div>
+
+  <!-- Floating cart button -->
+  <button class="cartFab" id="cartFab" aria-label="Open cart" type="button">
+    <span class="badge hidden" id="cartBadge">0</span>
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M6.5 6h15l-1.3 7.2a3 3 0 0 1-3 2.5H9.2a3 3 0 0 1-2.95-2.35L4.5 3H2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm9 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" fill="currentColor"/>
+    </svg>
+  </button>
+
+  <div class="footerHint">Scroll down • One phone per row</div>
+
+  <!-- Shared overlay -->
+  <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+  <!-- DETAILS SHEET -->
+  <div class="sheet" id="detailsSheet" role="dialog" aria-modal="true" aria-labelledby="detailsTitle" aria-describedby="detailsDesc">
+    <div class="grab" aria-hidden="true"></div>
+
+    <div class="sheetHeader">
+      <div class="sheetImg"><img id="detailsImg" alt="Selected phone" /></div>
+      <div class="sheetTitle">
+        <h2 id="detailsTitle">iPhone</h2>
+        <p id="detailsDesc">Choose a color and storage size.</p>
+      </div>
+      <button class="closeBtn" id="detailsCloseBtn" aria-label="Close" type="button">✕</button>
+    </div>
+
+    <div class="section">
+      <h3>Color</h3>
+      <div class="swatches" id="swatches" aria-label="Choose color"></div>
+    </div>
+
+    <div class="section">
+      <h3>Storage</h3>
+      <div class="chips" id="storages" aria-label="Choose storage"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" id="detailsCancelBtn" type="button">Cancel</button>
+      <button class="btn primary" id="detailsAddBtn" type="button" aria-label="Add selected configuration to cart">
+        <span class="btnRow">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6.5 6h15l-1.3 7.2a3 3 0 1 1-3 2.5H9.2a3 3 0 0 1-2.95-2.35L4.5 3H2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm9 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" fill="currentColor"/>
+          </svg>
+          <span>Add to cart</span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- CART SHEET -->
+  <div class="sheet" id="cartSheet" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-describedby="cartDesc">
+    <div class="grab" aria-hidden="true"></div>
+
+    <div class="sheetHeader">
+      <div class="sheetImg" aria-hidden="true" style="display:flex;align-items:center;justify-content:center;">
+        <svg viewBox="0 0 24 24" fill="none" style="width:26px;height:26px;">
+          <path d="M6.5 6h15l-1.3 7.2a3 3 0 0 1-3 2.5H9.2a3 3 0 0 1-2.95-2.35L4.5 3H2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm9 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="sheetTitle">
+        <h2 id="cartTitle">Cart</h2>
+        <p id="cartDesc">Your selected items.</p>
+      </div>
+      <button class="closeBtn" id="cartCloseBtn" aria-label="Close" type="button">✕</button>
+    </div>
+
+    <div id="cartContent"></div>
+
+    <div class="cartActions" aria-label="Cart actions">
+      <div class="row">
+        <button class="btn" id="clearCartBtn" type="button">Clear cart</button>
+        <button class="btn" id="closeCartBtn" type="button">Done</button>
+      </div>
+      <button class="btn primary bigPrimary" id="getInsightsBtn" type="button" aria-label="Get insights">
+        <span class="btnRow">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 19h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M7 16V9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 16V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M17 16v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <span>Get insights</span>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- FULLSCREEN INSIGHTS (check + fireworks) -->
+  <div class="insightsOverlay" id="insightsOverlay" aria-hidden="true">
+    <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+    <div class="insightsCenter" role="dialog" aria-modal="true" aria-label="Insights">
+      <div class="checkCard">
+        <div class="checkBadge" aria-hidden="true">
+          <svg class="checkSvg" viewBox="0 0 64 64">
+            <path class="checkPath" d="M16 34 L28 46 L48 20"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const PHONES = [
+      { id: "p1", name: "iPhone 17 Pro Max", img: "https://i.postimg.cc/vm5nwvRR/1c0dd0b347cccb3ca6b426e9e60f4f3a-removebg-preview.png" },
+      { id: "p2", name: "iPhone 17 Pro",     img: "https://i.postimg.cc/PJ7JwLG7/5fca03e6e1b68bcfda3b24c07e3542a9-removebg-preview.png" },
+      { id: "p3", name: "iPhone 17 Plus",    img: "https://i.postimg.cc/yNTNTp4S/9bb2ec7b0ba9bdffb8a94326146ca43d-removebg-preview.png" },
+      { id: "p4", name: "iPhone 17",         img: "https://i.postimg.cc/0yR2119d/23df9839c3ce2f95f716a892261039fa-removebg-preview.png" },
+      { id: "p5", name: "iPhone 16 Pro Max", img: "https://i.postimg.cc/Dz52GWLg/923c129ff7ac19253e3b0f0d68e8f2c2-removebg-preview.png" },
+      { id: "p6", name: "iPhone 16 Pro",     img: "https://i.postimg.cc/NF2YZpSt/a8d1e4ffc6423672b3a39780cf06c233-removebg-preview.png" }
+    ];
+
+    const COLOR_OPTIONS = [
+      { key: "Black",  hex: "#111827" },
+      { key: "Silver", hex: "#d1d5db" },
+      { key: "Blue",   hex: "#3b82f6" },
+      { key: "Purple", hex: "#8b5cf6" },
+      { key: "Red",    hex: "#ef4444" },
+      { key: "Green",  hex: "#22c55e" }
+    ];
+    const STORAGE_OPTIONS = [
+      { key: "256GB", label: "256 GB" },
+      { key: "512GB", label: "512 GB" },
+      { key: "1TB",   label: "1 TB" }
+    ];
+
+    const SELECTIONS_KEY = "phoneSelections_v4";
+    const CART_KEY = "cart_v2";
+
+    const loadJSON = (k, fallback) => {
+      try { return JSON.parse(localStorage.getItem(k)) ?? fallback; } catch { return fallback; }
+    };
+    const saveJSON = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+    const escapeHtml = (str) => String(str).replace(/[&<>"']/g, m => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;"
+    }[m]));
+
+    let selections = loadJSON(SELECTIONS_KEY, {});
+    let cart = loadJSON(CART_KEY, { items: {} });
+
+    const listEl = document.getElementById("list");
+    const searchEl = document.getElementById("search");
+    const toast = document.getElementById("toast");
+
+    const overlay = document.getElementById("overlay");
+
+    const detailsSheet = document.getElementById("detailsSheet");
+    const detailsImg = document.getElementById("detailsImg");
+    const detailsTitle = document.getElementById("detailsTitle");
+    const swatchesEl = document.getElementById("swatches");
+    const storagesEl = document.getElementById("storages");
+    const detailsCloseBtn = document.getElementById("detailsCloseBtn");
+    const detailsCancelBtn = document.getElementById("detailsCancelBtn");
+    const detailsAddBtn = document.getElementById("detailsAddBtn");
+
+    const cartFab = document.getElementById("cartFab");
+    const cartBadge = document.getElementById("cartBadge");
+    const cartSheet = document.getElementById("cartSheet");
+    const cartCloseBtn = document.getElementById("cartCloseBtn");
+    const closeCartBtn = document.getElementById("closeCartBtn");
+    const clearCartBtn = document.getElementById("clearCartBtn");
+    const cartContent = document.getElementById("cartContent");
+    const getInsightsBtn = document.getElementById("getInsightsBtn");
+
+    const insightsOverlay = document.getElementById("insightsOverlay");
+    const confettiCanvas = document.getElementById("confettiCanvas");
+
+    const infoIcon = `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Z" stroke="currentColor" stroke-width="2"/>
+        <path d="M12 10.5v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M12 7.5h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+      </svg>`;
+    const cartIcon = `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6.5 6h15l-1.3 7.2a3 3 0 0 1-3 2.5H9.2a3 3 0 0 1-2.95-2.35L4.5 3H2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm9 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" fill="currentColor"/>
+      </svg>`;
+    const trashIcon = `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 7h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M10 11v7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M14 11v7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M6 7l1 14h10l1-14" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M9 7V4h6v3" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      </svg>`;
+    const plusIcon = `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 5v14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>`;
+    const minusIcon = `
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>`;
+
+    let activePhoneId = null;
+    let draftColor = null;
+    let draftStorage = null;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.classList.remove("show"), 1400);
+    }
+
+    function defaultSelection() {
+      return { color: COLOR_OPTIONS[0].key, storage: STORAGE_OPTIONS[0].key };
+    }
+
+    function getSelection(phoneId) {
+      return selections[phoneId] || defaultSelection();
+    }
+
+    function setSelection(phoneId, sel) {
+      selections[phoneId] = sel;
+      saveJSON(SELECTIONS_KEY, selections);
+    }
+
+    function cartKey(phoneId, color, storage) {
+      return `${phoneId}|${color}|${storage}`;
+    }
+
+    function addToCartWithSelection(phoneId, sel) {
+      const key = cartKey(phoneId, sel.color, sel.storage);
+      if (!cart.items[key]) {
+        cart.items[key] = { phoneId, color: sel.color, storage: sel.storage, qty: 1 };
+      } else {
+        cart.items[key].qty += 1;
+      }
+      saveJSON(CART_KEY, cart);
+      updateCartBadge();
+      showToast("Added to cart 🛒");
+    }
+
+    function addToCartFromList(phoneId) {
+      const sel = getSelection(phoneId);
+      addToCartWithSelection(phoneId, sel);
+    }
+
+    function removeCartItem(key) {
+      delete cart.items[key];
+      saveJSON(CART_KEY, cart);
+      updateCartBadge();
+      renderCart();
+    }
+
+    function updateCartQty(key, delta) {
+      const it = cart.items[key];
+      if (!it) return;
+      it.qty = (it.qty || 0) + delta;
+      if (it.qty <= 0) delete cart.items[key];
+      saveJSON(CART_KEY, cart);
+      updateCartBadge();
+      renderCart();
+    }
+
+    function clearCart() {
+      cart = { items: {} };
+      saveJSON(CART_KEY, cart);
+      updateCartBadge();
+      renderCart();
+      showToast("Cart cleared");
+    }
+
+    function getCartCount() {
+      return Object.values(cart.items).reduce((sum, it) => sum + (it.qty || 0), 0);
+    }
+
+    function updateCartBadge() {
+      const n = getCartCount();
+      cartBadge.textContent = String(n);
+      cartBadge.classList.toggle("hidden", n === 0);
+    }
+
+    function renderList(filterText = "") {
+      const q = filterText.trim().toLowerCase();
+      listEl.innerHTML = "";
+
+      const filtered = PHONES.filter(p => !q || p.name.toLowerCase().includes(q));
+
+      if (filtered.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "emptyBox";
+        empty.textContent = "No results. Try another search.";
+        listEl.appendChild(empty);
+        return;
+      }
+
+      filtered.forEach(phone => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <div class="imgBox">
+            <img src="${phone.img}" alt="${escapeHtml(phone.name)}" loading="lazy" />
+          </div>
+          <div class="info">
+            <h3 class="name">${escapeHtml(phone.name)}</h3>
+            <div class="actionsRow">
+              <button class="btnSoft" type="button" aria-label="Open details for ${escapeHtml(phone.name)}">
+                ${infoIcon}<span>Details</span>
+              </button>
+              <button class="iconPill" type="button" aria-label="Add ${escapeHtml(phone.name)} to cart">
+                ${cartIcon}
+              </button>
+            </div>
+          </div>
+        `;
+
+        const detailsBtn = card.querySelector(".btnSoft");
+        const cartBtn = card.querySelector(".iconPill");
+
+        detailsBtn.addEventListener("click", () => openDetails(phone.id));
+        cartBtn.addEventListener("click", () => addToCartFromList(phone.id));
+
+        listEl.appendChild(card);
+      });
+    }
+
+    function openOverlay() {
+      overlay.classList.add("show");
+      overlay.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeOverlay() {
+      overlay.classList.remove("show");
+      overlay.setAttribute("aria-hidden", "true");
+      detailsSheet.classList.remove("show");
+      cartSheet.classList.remove("show");
+      document.body.style.overflow = "";
+      activePhoneId = null;
+    }
+
+    overlay.addEventListener("click", closeOverlay);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay.classList.contains("show")) closeOverlay();
+      if (e.key === "Escape" && insightsOverlay.classList.contains("show")) hideInsights();
+    });
+
+    function openDetails(phoneId) {
+      const phone = PHONES.find(p => p.id === phoneId);
+      if (!phone) return;
+
+      activePhoneId = phoneId;
+      const sel = getSelection(phoneId);
+      draftColor = sel.color;
+      draftStorage = sel.storage;
+
+      detailsImg.src = phone.img;
+      detailsTitle.textContent = phone.name;
+
+      renderColorOptions();
+      renderStorageOptions();
+
+      openOverlay();
+      detailsSheet.classList.add("show");
+    }
+
+    function renderColorOptions() {
+      swatchesEl.innerHTML = "";
+      COLOR_OPTIONS.forEach(c => {
+        const btn = document.createElement("button");
+        btn.className = "swatch";
+        btn.style.setProperty("--c", c.hex);
+        btn.type = "button";
+        btn.title = c.key;
+        btn.setAttribute("aria-label", `Color: ${c.key}`);
+        btn.setAttribute("aria-pressed", String(draftColor === c.key));
+        btn.addEventListener("click", () => {
+          draftColor = c.key;
+          [...swatchesEl.children].forEach(el => el.setAttribute("aria-pressed", "false"));
+          btn.setAttribute("aria-pressed", "true");
+        });
+        swatchesEl.appendChild(btn);
+      });
+    }
+
+    function renderStorageOptions() {
+      storagesEl.innerHTML = "";
+      STORAGE_OPTIONS.forEach(s => {
+        const btn = document.createElement("button");
+        btn.className = "chip";
+        btn.type = "button";
+        btn.setAttribute("aria-pressed", String(draftStorage === s.key));
+        btn.textContent = s.label;
+        btn.addEventListener("click", () => {
+          draftStorage = s.key;
+          [...storagesEl.children].forEach(el => el.setAttribute("aria-pressed", "false"));
+          btn.setAttribute("aria-pressed", "true");
+        });
+        storagesEl.appendChild(btn);
+      });
+    }
+
+    detailsCloseBtn.addEventListener("click", closeOverlay);
+    detailsCancelBtn.addEventListener("click", closeOverlay);
+
+    detailsAddBtn.addEventListener("click", () => {
+      if (!activePhoneId) return;
+      const sel = { color: draftColor, storage: draftStorage };
+      setSelection(activePhoneId, sel);
+      addToCartWithSelection(activePhoneId, sel);
+      closeOverlay();
+    });
+
+    function openCart() {
+      renderCart();
+      openOverlay();
+      cartSheet.classList.add("show");
+    }
+
+    function renderCart() {
+      const entries = Object.entries(cart.items);
+      const totalQty = getCartCount();
+      const uniqueCount = entries.length;
+
+      if (entries.length === 0) {
+        cartContent.innerHTML = `<div class="emptyBox">Your cart is empty.</div>`;
+        return;
+      }
+
+      const html = [];
+
+      html.push(`
+        <div class="cartSummary" aria-label="Cart summary">
+          <div class="left">
+            <p class="title">Your cart</p>
+            <p class="meta">${uniqueCount} item type${uniqueCount === 1 ? "" : "s"} • ${totalQty} total</p>
+          </div>
+          <div class="pill">🛒 ${totalQty}</div>
+        </div>
+      `);
+
+      html.push(`<div class="cartList" aria-label="Cart items">`);
+      for (const [key, it] of entries) {
+        const phone = PHONES.find(p => p.id === it.phoneId);
+        const name = phone ? phone.name : "iPhone";
+        const img = phone ? phone.img : "";
+
+        html.push(`
+          <div class="cartItem">
+            <div class="cartMain">
+              <div class="cartThumb">${img ? `<img src="${img}" alt="${escapeHtml(name)}" loading="lazy" />` : ""}</div>
+              <div class="cartLeft">
+                <p class="cartName">${escapeHtml(name)}</p>
+                <p class="cartMeta">${escapeHtml(it.color)} • ${escapeHtml(it.storage)}</p>
+              </div>
+            </div>
+
+            <div class="cartRight">
+              <div class="qtyWrap" aria-label="Quantity controls">
+                <button class="qtyBtn" type="button" data-minus="${escapeHtml(key)}" aria-label="Decrease quantity">
+                  ${minusIcon}
+                </button>
+                <div class="qtyPill">x${it.qty}</div>
+                <button class="qtyBtn" type="button" data-plus="${escapeHtml(key)}" aria-label="Increase quantity">
+                  ${plusIcon}
+                </button>
+              </div>
+
+              <button class="iconBtn" type="button" data-remove="${escapeHtml(key)}" aria-label="Remove item">
+                ${trashIcon}
+              </button>
+            </div>
+          </div>
+        `);
+      }
+      html.push(`</div>`);
+      cartContent.innerHTML = html.join("");
+
+      cartContent.querySelectorAll("[data-remove]").forEach(btn => {
+        btn.addEventListener("click", () => removeCartItem(btn.getAttribute("data-remove")));
+      });
+      cartContent.querySelectorAll("[data-plus]").forEach(btn => {
+        btn.addEventListener("click", () => updateCartQty(btn.getAttribute("data-plus"), +1));
+      });
+      cartContent.querySelectorAll("[data-minus]").forEach(btn => {
+        btn.addEventListener("click", () => updateCartQty(btn.getAttribute("data-minus"), -1));
+      });
+    }
+
+    cartFab.addEventListener("click", openCart);
+    cartCloseBtn.addEventListener("click", closeOverlay);
+    closeCartBtn.addEventListener("click", closeOverlay);
+    clearCartBtn.addEventListener("click", clearCart);
+
+    searchEl.addEventListener("input", () => renderList(searchEl.value));
+
+    // ===== Insights (fullscreen check + fireworks) =====
+    let confettiRAF = null;
+    let confettiParticles = [];
+    let confettiT0 = 0;
+
+    function resizeCanvas(canvas) {
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      const w = Math.floor(window.innerWidth * dpr);
+      const h = Math.floor(window.innerHeight * dpr);
+      canvas.width = w;
+      canvas.height = h;
+      canvas._dpr = dpr;
+    }
+
+    function spawnConfetti(count = 180) {
+      const dpr = confettiCanvas._dpr || 1;
+      const W = confettiCanvas.width;
+      const H = confettiCanvas.height;
+
+      const colors = [
+        "#60a5fa","#a78bfa","#34d399","#f87171","#fbbf24","#22c55e","#38bdf8","#fb7185"
+      ];
+
+      confettiParticles = [];
+      for (let i = 0; i < count; i++) {
+        const size = (Math.random() * 8 + 6) * dpr;
+        const x = (W * 0.5) + (Math.random() - 0.5) * (W * 0.35);
+        const y = (H * 0.35) + (Math.random() - 0.5) * (H * 0.10);
+        const angle = (Math.random() * Math.PI * 2);
+        const speed = (Math.random() * 8 + 8) * dpr;
+        const vx = Math.cos(angle) * speed * 0.65;
+        const vy = Math.sin(angle) * speed - (Math.random() * 8 + 10) * dpr;
+
+        confettiParticles.push({
+          x, y, vx, vy,
+          r: Math.random() * Math.PI,
+          vr: (Math.random() - 0.5) * 0.22,
+          size,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          life: 1
+        });
+      }
+    }
+
+    function drawConfetti(t) {
+      const ctx = confettiCanvas.getContext("2d");
+      const W = confettiCanvas.width;
+      const H = confettiCanvas.height;
+
+      if (!confettiT0) confettiT0 = t;
+      const elapsed = (t - confettiT0) / 1000;
+
+      ctx.clearRect(0, 0, W, H);
+
+      ctx.save();
+      ctx.globalAlpha = 0.16;
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.ellipse(W * 0.5, H * 0.42, W * 0.18, H * 0.09, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      const gravity = 24 * (confettiCanvas._dpr || 1);
+      const drag = 0.985;
+
+      for (const p of confettiParticles) {
+        p.vx *= drag;
+        p.vy = p.vy * drag + gravity * 0.02;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.r += p.vr;
+
+        const fade = Math.max(0, 1 - (elapsed - 0.8) / 0.9);
+        p.life = Math.min(1, Math.max(0, fade));
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.r);
+        ctx.globalAlpha = 0.95 * p.life;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size * 0.5, -p.size * 0.35, p.size, p.size * 0.7);
+        ctx.restore();
+      }
+
+      if (elapsed < 1.7) {
+        confettiRAF = requestAnimationFrame(drawConfetti);
+      } else {
+        stopConfetti();
+      }
+    }
+
+    function stopConfetti() {
+      if (confettiRAF) cancelAnimationFrame(confettiRAF);
+      confettiRAF = null;
+      confettiT0 = 0;
+      const ctx = confettiCanvas.getContext("2d");
+      ctx && ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+    }
+
+    function showInsights() {
+      insightsOverlay.classList.add("show");
+      insightsOverlay.setAttribute("aria-hidden", "false");
+
+      resizeCanvas(confettiCanvas);
+      spawnConfetti(200);
+      stopConfetti();
+      confettiRAF = requestAnimationFrame(drawConfetti);
+
+      clearTimeout(showInsights._t);
+      showInsights._t = setTimeout(() => {
+        hideInsights();
+        closeOverlay();
+      }, 1750);
+    }
+
+    function hideInsights() {
+      insightsOverlay.classList.remove("show");
+      insightsOverlay.setAttribute("aria-hidden", "true");
+      stopConfetti();
+    }
+
+    window.addEventListener("resize", () => {
+      if (insightsOverlay.classList.contains("show")) {
+        resizeCanvas(confettiCanvas);
+      }
+    });
+
+    insightsOverlay.addEventListener("click", () => {
+      clearTimeout(showInsights._t);
+      hideInsights();
+      closeOverlay();
+    });
+
+    getInsightsBtn.addEventListener("click", () => {
+      showInsights();
+    });
+
+    updateCartBadge();
+    renderList("");
+  </script>
+</body>
+</html>
